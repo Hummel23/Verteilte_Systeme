@@ -10,22 +10,23 @@ import java.util.Queue;
  */
 
 public class Parkinglot{
-	
+
 	/**
 	 * capacity/free parking spots in the parking lot.
 	 */
 	private int capacity;
-	
+
 	/**
 	 * saves the cars that enter/want to enter the parking lot in a queue. 
 	 */
 	private Queue<Car> queue = new LinkedList<>();
+	//TODO check use of concurrentlinkedqueue
 	
 	/**
 	 * logs information/errors and displays them in the console.
 	 */
 	private Logger logger = Logger.getInstance();
-	
+
 	/**
 	 * Creates the parking lot with the capacity defined in the parameter.
 	 * @param cap (int)
@@ -36,7 +37,7 @@ public class Parkinglot{
 		}
 		this.capacity=cap;
 	}
-	
+
 	/**
 	 * A car is added to the queue for entering the parking lot. If the parking lot still has
 	 * capacity it is removed from the queue immediately and the capacity is decreased by 1.
@@ -45,21 +46,30 @@ public class Parkinglot{
 	 * @param car (Car)
 	 */
 	public synchronized void enter(Car car) {
-		
+
 		logger.info("car-id " + car.identification + ": arrived");
+//		if (capacity == 0){
+//			try {	
+//				queue.add(car);
+//				logger.info("car-id " + car.identification + ": waits - parking lot full");
+//				do{
+//					wait();
+//				}while(!queue.element().equals(car)|| capacity==0);
+//				queue.poll();
+//			} catch (InterruptedException e) {
+//				logger.error("[Parkhaus.java] [car-id: " + car.identification +"] enter(): fails");
+//			}
+//		}
 		queue.add(car);
-		while (capacity == 0){
-			try {	
-					logger.info("car-id " + car.identification + ": waits - parking lot full");
-					wait();
-					if(!queue.element().equals(car)){
-						wait();
-					}
-			} catch (InterruptedException e) {
+		while(capacity==0 || !queue.element().equals(car)){
+			try{
+				logger.info("car-id " + car.identification + ": waits - parking lot full");
+				wait();
+			}catch (InterruptedException e){
 				logger.error("[Parkhaus.java] [car-id: " + car.identification +"] enter(): fails");
 			}
 		}
-		queue.remove(car);
+		queue.poll();
 		capacity--;
 		logger.info("car-id " + car.identification + ": entered");
 		logger.info("capacity: " + capacity);
