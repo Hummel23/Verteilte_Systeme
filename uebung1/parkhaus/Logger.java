@@ -1,7 +1,7 @@
 package uebung1.parkhaus;
 
 /**
- * Klasse Logger. Loggt alle Exceptions.
+ * Class Logger. For logging information and errors.
  * 
  * @author Saba Kues
  * 
@@ -9,20 +9,18 @@ package uebung1.parkhaus;
 public class Logger {
 
 	/**
-	 * Statische Variable Logger. Kann von allen Klassen angesprochen werden
-	 * ohne Objektinstanziierung.
+	 * Static variable Logger.
 	 */
 	private static Logger instance;
 
 	/**
-	 * Parameterloser Konstruktor
+	 * Constructor.
 	 */
 	Logger() {
 	}
 
 	/**
-	 * Gibt die statische Logger-Variable zurück, bzw. erstellt sie falls sie
-	 * noch nicht existiert.
+	 * Returns the static object variable Logger. 
 	 * 
 	 * @return Logger
 	 */
@@ -33,30 +31,28 @@ public class Logger {
 	}
 
 	/**
-	 * Loggt die im Parameter mitgegebene Information, mit dem Loglevel info.
+	 * Logs String handed over as parameter with log level 'info'.
 	 * 
-	 * @param to_log
-	 *            Information (String)
+	 * @param to_log (String)
 	 */
 	public void info(String to_log) {
 		log("Info", to_log);
 	}
 
 	/**
-	 * Loggt den im Parameter mitgegebenen Fehler, mit dem Loglevel error.
+	 * Logs String handed over as parameter with log level 'error'.
 	 * 
-	 * @param to_log
-	 *            Fehlermeldung (String)
+	 * @param to_log (String)
 	 */
 	public void error(String to_log) {
 		log("Error", to_log);
 	}
 
 	/**
-	 * @param level
-	 *            der Exception (z.b. "error", "info") (String)
-	 * @param to_log
-	 *            info über die Exception (String)
+	 * 
+	 * Private method to sysout a String with a certain level. 
+	 * @param level (String), i.e. info/error
+	 * @param to_log (String)
 	 */
 	private void log(String level, String to_log) {
 		System.out.println(level + ": " + to_log);

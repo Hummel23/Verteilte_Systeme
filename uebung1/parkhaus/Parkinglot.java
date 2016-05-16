@@ -9,64 +9,65 @@ import java.util.Queue;
  * @author Saba Kues
  */
 
-public class Parkinglot {
+public class Parkinglot{
 	
 	/**
 	 * capacity/free parking spots in the parking lot.
 	 */
 	private int capacity;
+	
 	/**
-	 * saves the cars that enter/want to enter the parking lot in a queue (Fifo)
+	 * saves the cars that enter/want to enter the parking lot in a queue. 
 	 */
-	private Queue<Car> queue;
-		
+	private Queue<Car> queue = new LinkedList<>();
+	
 	/**
-	 * loggs information/errors and displays them in the console.
+	 * logs information/errors and displays them in the console.
 	 */
 	private Logger logger = Logger.getInstance();
 	
 	/**
 	 * Creates the parking lot with the capacity defined in the parameter.
-	 * @param cap
+	 * @param cap (int)
 	 */
 	public Parkinglot(int cap){
 		if(cap<0){
 			cap=0;
 		}
 		this.capacity=cap;
-		queue = new LinkedList<>();
 	}
 	
 	/**
-	 * A car enters the parking lot by being added to the queue.
-	 * If the parking lot still has capacity it is added immediately, otherwise it will wait for 
-	 * notification that there is capacity. 
-	 * @param car
+	 * A car is added to the queue for entering the parking lot. If the parking lot still has
+	 * capacity it is removed from the queue immediately and the capacity is decreased by 1.
+	 * Otherwise the car will wait for notification that there is capacity. When capacity is available 
+	 * again the first car in the queue will enter the parking lot.  
+	 * @param car (Car)
 	 */
 	public synchronized void enter(Car car) {
 		
 		logger.info("car-id " + car.identification + ": arrived");
-		
+		queue.add(car);
 		while (capacity == 0){
-			try {
-				synchronized (queue) {
-					queue.add(car);
+			try {	
 					logger.info("car-id " + car.identification + ": waits - parking lot full");
-					queue.wait();
-				}
-				
+					wait();
+					if(!queue.element().equals(car)){
+						wait();
+					}
 			} catch (InterruptedException e) {
 				logger.error("[Parkhaus.java] [car-id: " + car.identification +"] enter(): fails");
 			}
 		}
+		queue.remove(car);
 		capacity--;
 		logger.info("car-id " + car.identification + ": entered");
 		logger.info("capacity: " + capacity);
 	}
 
 	/**
-	 * A car will exit the parking lot by being removed from the queue. Other Threads will be notified. 
-	 * @param car
+	 * A car will exit the parking lot. Capacity will be incremented. Other Threads will be notified. 
+	 * @param car (Car)
 	 */
 	public synchronized void exit(Car car) {
 		capacity++;

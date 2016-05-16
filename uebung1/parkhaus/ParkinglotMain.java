@@ -8,7 +8,7 @@ package uebung1.parkhaus;
 public class ParkinglotMain {
 
 	/**
-	 * Creates a parking lot and an array with 15 cars, that enter and exit the parking lot. 
+	 * Creates a parking lot and an array with 25 cars, that enter and exit the parking lot. 
 	 */
 	public static void main(String[] args) {
 		Parkinglot parkinglot = new Parkinglot(10);
